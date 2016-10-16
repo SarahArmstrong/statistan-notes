@@ -2,6 +2,9 @@ import urllib
 import urllib.request
 from bs4 import BeautifulSoup
 
+import pandas as pd
+import re
+
 def make_soup(url):
 	page = urllib.request.urlopen(url)
 	sdata = BeautifulSoup(page, 'html.parser')
@@ -22,4 +25,11 @@ for trow in trows:
     bbdata_ = [ele.text.strip() for ele in bbdata_]
     bbdata.append(bbdata_)
     
-print(bbdata)
+headers =  bbdata.pop(0)
+df = pd.DataFrame(bbdata, columns = headers)
+
+df = df.ix[:, 1:5]
+
+year = print(soup.title.text[-4:])
+year
+
