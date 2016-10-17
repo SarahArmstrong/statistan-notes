@@ -11,7 +11,9 @@ def make_soup(url):
 	sdata = BeautifulSoup(page, 'html.parser')
 	return sdata
 
+
 # (1) Table Type 1: 2009 - Present Year
+
 
 # i. Present year
 
@@ -39,6 +41,7 @@ year = title[-4:]
 print(year)
 
 df.to_csv('bbdata' + str(year), sep=',')
+
 
 # ii. 2009 - Present year_{-1}
 
