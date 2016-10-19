@@ -21,8 +21,7 @@ url = 'http://www.satp.org/satporgtp/countries/pakistan/database/majorincidents.
 
 soup = make_soup(url)
 
-table = soup.findAll('table')
-table = table[2]
+table = soup.findAll('table')[2]
 
 trows = table.findAll('tr')
 midata = []
@@ -64,8 +63,7 @@ for yr in range(2013, present_year, 1):
 
     soup = make_soup(url)
 
-    table = soup.findAll('table')
-    table = table[2]
+    table = soup.findAll('table')[2]
 
     trows = table.findAll('tr')
     midata = []
@@ -107,8 +105,7 @@ url = 'http://www.satp.org/satporgtp/countries/pakistan/database/majorincidents2
 
 soup = make_soup(url)
 
-table = soup.findAll('table')
-table = table[1]
+table = soup.findAll('table')[1]
 
 trows = table.findAll('tr')
 midata = []
@@ -146,8 +143,7 @@ for yr in range(2007, 2012, 1):
 
     soup = make_soup(url)
 
-    table = soup.findAll('table')
-    table = table[1]
+    table = soup.findAll('table')[1]
 
     trows = table.findAll('tr')
     midata = []
