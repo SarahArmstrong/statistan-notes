@@ -31,6 +31,12 @@ for trow in trows:
     bbdata_ = [ele.text.strip() for ele in bbdata_]
     bbdata.append(bbdata_)
 
+bbdata = [[i.replace('\r\n','') for i in li] for li in bbdata]
+bbdata = [[i.replace('\n\n\n\n\n\n\n', '') for i in li] for li in bbdata]
+bbdata = [[i.replace('           ', ' ') for i in li] for li in bbdata]
+bbdata = [[i.replace('       ', ' ') for i in li] for li in bbdata]
+bbdata = [[i.replace('     ', ' ') for i in li] for li in bbdata]
+
 headers =  bbdata.pop(0)
 df = pd.DataFrame(bbdata, columns = headers)
 
@@ -62,6 +68,12 @@ for yr in range(2009, present_year, 1):
         bbdata_ = [ele.text.strip() for ele in bbdata_]
         bbdata.append(bbdata_)
     
+        bbdata = [[i.replace('\r\n','') for i in li] for li in bbdata]
+        bbdata = [[i.replace('\n\n\n\n\n\n\n', '') for i in li] for li in bbdata]
+        bbdata = [[i.replace('           ', ' ') for i in li] for li in bbdata]
+        bbdata = [[i.replace('       ', ' ') for i in li] for li in bbdata]
+        bbdata = [[i.replace('     ', ' ') for i in li] for li in bbdata]
+
     headers =  bbdata.pop(0)
     df = pd.DataFrame(bbdata, columns = headers)
 
@@ -92,6 +104,12 @@ for yr in range(2000, 2009, 1):
         bbdata_ = [ele.text.strip() for ele in bbdata_]
         bbdata.append(bbdata_)
     
+    bbdata = [[i.replace('\r\n','') for i in li] for li in bbdata]
+    bbdata = [[i.replace('\n\n\n\n\n\n\n', '') for i in li] for li in bbdata]
+    bbdata = [[i.replace('           ', ' ') for i in li] for li in bbdata]
+    bbdata = [[i.replace('       ', ' ') for i in li] for li in bbdata]
+    bbdata = [[i.replace('     ', ' ') for i in li] for li in bbdata]
+
     headers =  bbdata.pop(0)
     df = pd.DataFrame(bbdata, columns = headers)
     
