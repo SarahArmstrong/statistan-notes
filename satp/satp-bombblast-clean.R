@@ -1,5 +1,6 @@
 setwd("C:/Users/user/Documents/Git/statistan-data/SATP/bomb blasts")
 library(plyr)
+library(reshape2)
 
 # Load in all datasets by year
 dat2000 <- read.csv("bbdata2000")
@@ -131,40 +132,62 @@ for(i in 1:nrow(dat)) {
 
 missing_distr <- dat[is.na(dat$District),]
 nrow(missing_distr)
-missing_distr
+#missing_distr
 
-# Check for missing districts
-nmissing_distr <- nrow(subset(dlist[[k]], is.na(District)))
-for(i in 1:length(nmissing_distr)){
-  nmissing_distr[i] <- nmissing
-}
-
-
-
-
-
-## Do again for Provinces
+# Fill Province column using fuzzy matching (agrepl):
 for(i in 1:nrow(dat)) {
-  ifelse(agrepl('Bolan', dat$Place[i]), dat$District[i] <- 'Kachhi', dat$District[i] <- dat$District[i])
-  ifelse(agrepl('SWA', dat$Place[i]), dat$District[i] <- 'South Waziristan', dat$District[i] <- dat$District[i])
-  for(j in 1:length(districts)) {
-    ifelse(agrepl(districts[j], dat$Place[i], max = 2), dat$District[i] <- districts[j], dat$District[i] <- dat$District[i])
+  ifelse(agrepl('AJK', dat$Place[i]), dat$Province[i] <- 'Azad Kashmir', dat$Province[i])
+  ifelse(agrepl('Muzaffarabad', dat$District[i]), dat$Province[i] <- 'Azad Kashmir', dat$Province[i])
+  ifelse(agrepl('BL', dat$Place[i]), dat$Province[i] <- 'Balochistan', dat$Province[i])
+  ifelse(agrepl('Quetta', dat$District[i]), dat$Province[i] <- 'Balochistan', dat$Province[i])
+  ifelse(agrepl('Kech', dat$District[i]), dat$Province[i] <- 'Balochistan', dat$Province[i])
+  ifelse(agrepl('Federally Administered Tribal Areas', dat$Place[i]), dat$Province[i] <- 'FATA', dat$Province[i])
+  ifelse(agrepl('Khyber Agency', dat$District[i]), dat$Province[i] <- 'FATA', dat$Province[i])
+  ifelse(agrepl('GB', dat$Place[i]), dat$Province[i] <- 'Gilgit Baltistan', dat$Province[i])
+  ifelse(agrepl('ICT', dat$Place[i]), dat$Province[i] <- 'Islamabad', dat$Province[i])
+  ifelse(agrepl('JK', dat$Place[i]), dat$Province[i] <- 'Jammu and Kashmir', dat$Province[i])
+  ifelse(agrepl('KP', dat$Place[i]), dat$Province[i] <- 'Khyber Pakhtunkhwa', dat$Province[i])
+  ifelse(agrepl('NWFP', dat$Place[i]), dat$Province[i] <- 'Khyber Pakhtunkhwa', dat$Province[i])
+  ifelse(agrepl('N.W.F.P.', dat$Place[i]), dat$Province[i] <- 'Khyber Pakhtunkhwa', dat$Province[i])
+  ifelse(agrepl('Abbottabad', dat$District[i]), dat$Province[i] <- 'Khyber Pakhtunkhwa', dat$Province[i])
+  ifelse(agrepl('Chitral', dat$District[i]), dat$Province[i] <- 'Khyber Pakhtunkhwa', dat$Province[i])
+  ifelse(agrepl('Mansehra', dat$District[i]), dat$Province[i] <- 'Khyber Pakhtunkhwa', dat$Province[i])
+  ifelse(agrepl('PJ', dat$Place[i]), dat$Province[i] <- 'Punjab', dat$Province[i])
+  ifelse(agrepl('Rawalpindi', dat$District[i]), dat$Province[i] <- 'Punjab', dat$Province[i])
+  ifelse(agrepl('Okara', dat$District[i]), dat$Province[i] <- 'Punjab', dat$Province[i])
+  ifelse(agrepl('SN', dat$Place[i]), dat$Province[i] <- 'Sindh', dat$Province[i])
+  ifelse(agrepl('Karachi', dat$District[i]), dat$Province[i] <- 'Sindh', dat$Province[i])
+  ifelse(agrepl('Hyderabad', dat$District[i]), dat$Province[i] <- 'Sindh', dat$Province[i])
+  for(j in 1:length(provinces)) {
+    if (grepl(provinces[j], dat$Place[i])) {
+      dat$Province[i] <- provinces[j]
+    } else {
+      dat$Province[i]
+    }
+    if (is.na(dat$Province[i])) {
+      if (agrepl(provinces[j], dat$Place[i])) {
+        dat$Province[i] <- provinces[j]
+      } else {
+        dat$Province[i]
+      }
+    } else {
+      dat$Province[i]
+    }
   }
 }
 
-dat_distr.unmatched <- subset(dat, is.na(District))
-nrow(dat_distr.unmatched)
-show(dat_distr.unmatched)
+missing_prov <- dat[is.na(dat$Province),]
+nrow(missing_prov)
+#missing_prov
 
-
-
-
-
-
-
-
-for(i in 1:length(dlist)){
-  vector <-
-    dlist[[i]]$Year <- vector # Add year columns to data.frames
+# Split Date -> "Month", "Day" columns
+for(i in 1:nrow(dat)) {
+  ifelse(dat$Date[i] == "", dat$Date[i] <- NA, dat$Date[i])
 }
-#place <- data.frame(do.call('rbind', strsplit(as.character(dat$Place),'/',fixed=TRUE)))
+date <- data.frame(do.call('rbind', strsplit(as.character(dat$Date),' ', fixed = TRUE)))[,1:2]
+names(date) <- c('Month', 'Day')
+date$Month <- match(date$Month, month.name)
+dat <- cbind(dat, date)
+
+# Export dat as .csv file
+write.csv(dat, 'bbdata.csv')
