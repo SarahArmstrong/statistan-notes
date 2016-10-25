@@ -176,4 +176,4 @@ date$Month <- match(date$Month, month.name)
 dat <- cbind(dat, date)
 
 # Export dat as .csv file
-write.csv(dat, 'bbdata.csv')
+write.csv(dat, 'bbdata.csv', row.names = FALSE)
