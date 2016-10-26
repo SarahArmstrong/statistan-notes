@@ -175,5 +175,9 @@ names(date) <- c('Month', 'Day')
 date$Month <- match(date$Month, month.name)
 dat <- cbind(dat, date)
 
+# Force NAs as empty strings for back end of tool
+dat <- sapply(dat, as.character)
+dat[is.na(dat)] <- ""
+
 # Export dat as .csv file
 write.csv(dat, 'bbdata.csv', row.names = FALSE)
