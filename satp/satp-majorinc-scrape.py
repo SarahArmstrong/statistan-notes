@@ -121,11 +121,12 @@ midata = midata.replace('\n\n\n\n\n\n\n', '')
 midata = midata.replace('           ', ' ')
 midata = midata.split('\n')
 
+# Remove empty strings from list
+midata = list(filter(None, midata))
+
 title = midata[0]
 midata = midata[2:]
 
-for i in range(0, len(midata), 1):
-    midata[i] = midata[i].split(':')
 midata = [val for sublist in midata for val in sublist]
 
 df = pd.DataFrame(midata)
@@ -159,11 +160,12 @@ for yr in range(2007, 2012, 1):
     midata = midata.replace('           ', ' ')
     midata = midata.split('\n')
 
+    # Remove empty strings from list
+    midata = list(filter(None, midata))
+    
     title = midata[0]
     midata = midata[2:]
 
-    for i in range(0, len(midata), 1):
-        midata[i] = midata[i].split(':')
     midata = [val for sublist in midata for val in sublist]
 
     df = pd.DataFrame(midata)
@@ -173,4 +175,43 @@ for yr in range(2007, 2012, 1):
     df.to_csv('midata' + str(year), sep=',')
 
 
+# 1988 - 2006: exported as single string .csv file - must be reshaped in R
+    
+midata = []
 
+yearslist = (2004, 2006)
+for yr in yearslist:
+
+    url = 'http://www.satp.org/satporgtp/countries/pakistan/database/majorinc' + str(yr) + '.htm'
+
+    soup = make_soup(url)
+
+    block = soup.find('div', attrs={'id':'block'})
+    
+    table = block.find('table')
+    
+    trow = table.findAll('tr')[2]
+    
+    tdata = trow.findAll('td')[2]
+    
+    paragraphs = tdata.findAll('p')
+    
+    midata_ = []
+    midata_body = [p.text.strip() for p in paragraphs]
+    midata_.append(midata_body)
+    midata_ = [val for sublist in midata_ for val in sublist]
+
+    midata_ = [ele.replace('\r\n', '') for ele in midata_]
+    midata_ = [ele.replace('\n\n\n\n\n\n\n', '') for ele in midata_]
+    midata_ = [ele.replace('           ', ' ') for ele in midata_]
+    
+    # Remove empty strings from list
+    midata_ = list(filter(None, midata_))
+    
+    midata.append(midata_)
+    
+midata = [val for sublist in midata for val in sublist]
+
+df = pd.DataFrame(midata)
+
+df.to_csv('midata1988-2006', sep=',')
