@@ -127,8 +127,6 @@ midata = list(filter(None, midata))
 title = midata[0]
 midata = midata[2:]
 
-midata = [val for sublist in midata for val in sublist]
-
 df = pd.DataFrame(midata)
 
 year = title[-4:]
@@ -165,8 +163,6 @@ for yr in range(2007, 2012, 1):
     
     title = midata[0]
     midata = midata[2:]
-
-    midata = [val for sublist in midata for val in sublist]
 
     df = pd.DataFrame(midata)
 
